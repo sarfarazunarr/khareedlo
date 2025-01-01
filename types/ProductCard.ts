@@ -1,5 +1,5 @@
 export interface ProductCardType {
-    id: number, rating: { rate: number, count: number }, title: string, image: string, price: number, description: string, category: string, discountedprice?: number, stock: boolean
+    id: number, rating: { rate: number, count: number }, title: string, image: string, price: number, description: string, category: string, discountedprice?: number, stock: boolean, slug: string
 }
 export interface CartProduct {
     id: number, title: string, quantity: number, image: string, price: number, totalAmount: number
