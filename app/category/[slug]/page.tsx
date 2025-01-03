@@ -4,7 +4,7 @@ import { ProductCardType } from '@/types/ProductCard';
 import Hero from '@/app/components/Hero';
 
 const Category = async ({ params }: { params: { slug: string } }) => {
-  const res = await fetch(`https://fakestoreapi.com/products/category/${params.slug}`);
+  const res = await fetch(`${process.env.PUBLIC_ORIGIN}/api/products?category=${params.slug}`);
   const data: ProductCardType[] = await res.json();
 
   return (

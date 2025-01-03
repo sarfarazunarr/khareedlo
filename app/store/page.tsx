@@ -4,7 +4,7 @@ import { ProductCardType } from '@/types/ProductCard';
 import Hero from '../components/Hero';
 
 const Store = async () => {
-  const res = await fetch('https://fakestoreapi.com/products');
+  const res = await fetch(`${process.env.PUBLIC_ORIGIN}/api/products?limit=20`);
   const data: ProductCardType[] = await res.json();
 
   return (

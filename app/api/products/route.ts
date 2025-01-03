@@ -1,61 +1,56 @@
 import { NextResponse, NextRequest } from "next/server";
 import ConnectDB from "@/utils/ConnectDB";
 import Product from "@/models/Product.model";
-import Joi from "joi";
 
-export const Productschema = Joi.object({
-    title: Joi.string().required(),
-    image: Joi.string().uri().required(),
-    price: Joi.number().required(),
-    description: Joi.string().required(),
-    category: Joi.string().required(),
-    rating: Joi.object({
-        rate: Joi.number().max(5.0).required(),
-        count: Joi.number().required()
-    }),
-    discountedprice: Joi.number().required(),
-    stock: Joi.boolean().required(),
-    slug: Joi.string().required()
-});
 
-export async function POST(req: NextRequest){
+export async function POST(req: NextRequest) {
     try {
         await ConnectDB();
         const data = await req.formData();
-        const title = data.get('title');
-        const image = data.get('image');
-        const price = data.get('price');
-        const description = data.get('description');
-        const category = data.get('category');
-        const rate = data.get('rate');
-        const count = data.get('count');
-        const discountedprice = data.get('discountedprice');
-        const stock = data.get('stock');
-        const slug = data.get('slug');
+        const title = data.get('title') as string;
+        const image = data.get('image') as string;
+        const price = Number(data.get('price')) as number;
+        const description = data.get('description') as string;
+        const category = data.get('category') as string;
+        const rate = Number(data.get('rate')) as number;
+        const count = Number(data.get('count')) as number;
+        const discountedprice = Number(data.get('discountedprice')) as number;
+        const stock = data.get('stock') as unknown as boolean;
+        let slug = data.get('slug') as string;
         const rating = { rate, count };
-        // Handle Error if any field has invalid data
-        const { error } = Productschema.validate({ title, image, price, description, category, rating, discountedprice, stock, slug });
-        if(error) return NextResponse.json({message: error.details[0].message, success: false}, {status: 400});
+
+        if (!slug) {
+            // Generating slug from title
+            slug = title?.toLowerCase().replace(/ /g, '-');
+        }
+
 
         // Checking is slug already exist
-        const checkSlug = await Product.find({slug});
-        if(checkSlug.length > 0) return NextResponse.json({message: 'Slug already exists', success: false}, {status: 400});
+        const checkSlug = await Product.find({ slug });
+        if (checkSlug.length > 0) return NextResponse.json({ message: 'Slug already exists', success: false }, { status: 400 });
 
         // saving product
         const newProduct = new Product({ title, image, price, description, category, rating, discountedprice, stock, slug });
         await newProduct.save();
-        return NextResponse.json({message: `Product created successfully ${title}`, success: false}, {status: 200});
+        return NextResponse.json({ message: `Product created successfully ${title}`, success: true }, { status: 200 });
     } catch (error) {
-        return NextResponse.json(error, {status: 500});
+        return NextResponse.json(error, { status: 500 });
     }
 }
 
-export async function GET(req: NextRequest){
+export async function GET(req: NextRequest) {
     try {
         await ConnectDB();
-        const products = await Product.find();
-        return NextResponse.json(products, {status: 200});
+        const category = req.nextUrl.searchParams.get('category');
+        const limit = req.nextUrl.searchParams.get('limit');
+
+        if (category) {
+            const products = await Product.find({ category }).limit(limit ? parseInt(limit) : 20);
+            return NextResponse.json(products, { status: 200 });
+        }
+        const products = await Product.find({}).limit(limit ? parseInt(limit) : 20);
+        return NextResponse.json(products, { status: 200 });
     } catch (error) {
-        return NextResponse.json(error, {status: 500});
+        return NextResponse.json(error, { status: 500 });
     }
 }

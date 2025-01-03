@@ -1,16 +1,7 @@
 import Product from "@/models/Product.model";
 import Question from "@/models/Questions.model";
-import Joi from "joi";
 import { NextRequest, NextResponse } from "next/server";
 import ConnectDB from "@/utils/ConnectDB";
-
-const QuestionSchema = Joi.object({
-    productId: Joi.string().required(),
-    name: Joi.string().required(),
-    question: Joi.string().required(),
-    answer: Joi.string().default(''),
-    isAnswered: Joi.boolean().default(false)
-})
 
 export async function POST(req: NextRequest) {
     try {
@@ -19,8 +10,8 @@ export async function POST(req: NextRequest) {
         const productId = data.get('productId')
         const name = data.get('name')
         const question = data.get('question')
-        const { error } = QuestionSchema.validate({ productId, name, question });
-        if (error) return NextResponse.json({ error: error.details }, { status: 400 });
+
+
         const product = await Product.findById(productId);
         if (!product) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
         const newQuestion = new Question({
@@ -44,8 +35,7 @@ export async function PUT(req: NextRequest) {
         const productId = data.get('productId')
         const name = data.get('name')
         const question = data.get('question')
-        const { error } = QuestionSchema.validate({ productId, name, question });
-        if (error) return NextResponse.json({ error: error.details }, { status: 400 });
+
         const product = await Product.findById(productId);
         if (!product) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
 
@@ -77,7 +67,7 @@ export async function DELETE(req: NextRequest) {
 export async function GET(req: NextRequest) {
     try {
         await ConnectDB();
-        const id = req.nextUrl.searchParams.get('id');
+        const id = req.nextUrl.searchParams.get('product');
 
         const questions = await Question.find({productId: id});
         return NextResponse.json({data: questions}, { status: 200 });

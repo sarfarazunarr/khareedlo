@@ -1,7 +1,6 @@
 import ConnectDB from "@/utils/ConnectDB";
 import Product from "@/models/Product.model";
 import { NextRequest, NextResponse } from "next/server";
-import { Productschema } from "../route";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
     try {
@@ -37,9 +36,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ slug
         const stock = data.get('stock');
         const slug2 = data.get('slug');
         const rating = { rate, count };
-        // Handle Error if any field has invalid data
-        const { error } = Productschema.validate({ title, image, price, description, category, rating, discountedprice, stock, slug2 });
-        if(error) return NextResponse.json({message: error.details[0].message, success: false}, {status: 400});
+       
         
 
         // saving product

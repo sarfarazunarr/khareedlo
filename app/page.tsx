@@ -6,13 +6,14 @@ import { ProductCardType } from "@/types/ProductCard";
 import Hero from "./components/Hero";
 
 export default async function Home() {
-  const res = await fetch('https://fakestoreapi.com/products?limit=5');
+  const res = await fetch(`${process.env.PUBLIC_ORIGIN}/api/products?limit=5`);
   const data: ProductCardType[] = await res.json();
   const categories = ['jewelery', 'electronics', 'men\'s clothing', 'women\'s clothing'];
   const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-  const res2 = await fetch(`https://fakestoreapi.com/products/category/${randomCategory}?limit=4`);
+  const res2 = await fetch(`${process.env.PUBLIC_ORIGIN}/api/products?limit=4?category=${randomCategory}`);
   const data2: ProductCardType[] = await res2.json();
 
+  
   return (
     <div className="w-full">
       <Hero title="Your One-Stop Shop For Everything You Love" subtitle="Discover Amazing Deals and Unbeatable Prices Today!" />

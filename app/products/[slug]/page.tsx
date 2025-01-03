@@ -5,6 +5,8 @@ import { CartProduct, ProductCardType } from '@/types/ProductCard';
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { BsStarFill } from 'react-icons/bs'
+import Review from './Review';
+import Questions from './Questions';
 
 
 const ProductPage = ({ params }: { params: { slug: string } }) => {
@@ -19,11 +21,12 @@ const ProductPage = ({ params }: { params: { slug: string } }) => {
     const [cartbtn, setCartbtn] = useState('Add to Cart')
     useEffect(() => {
         const getData = async () => {
-            const res = await fetch(`https://fakestoreapi.com/products/${params.slug}`);
+            const res = await fetch(`/api/products/${params.slug}`);
+            console.log(process.env.PUBLIC_ORIGIN);
             const info = await res.json();
-            setData(info);
+            setData(info.data);
             setPrice(info.price);
-            const res2 = await fetch(`https://fakestoreapi.com/products/category/${info.category}?limit=4`);
+            const res2 = await fetch(`/api/products?limit=4?category=${info.category}`);
             const productsTemp = await res2.json();
             setData2(productsTemp);
         }
@@ -123,40 +126,11 @@ const ProductPage = ({ params }: { params: { slug: string } }) => {
                     {/* Review & Questions Section */}
                     <section className='w-full px-4 md:px-20 py-10 grid grid-cols-8 gap-3'>
                         {/* Reviews */}
-                        <div className='flex flex-col col-span-full md:col-span-4 justify-start gap-5'>
-                            <h3 className='text-3xl font-semibold text-black'>Reviews</h3>
-                            <div className="conversation flex flex-col justify-start items-start bg-blue-50 rounded-md p-2">
-                                <div className="review p-5 flex flex-col justify-start gap-2">
-                                    <div className='flex justify-start items-center gap-2'>
-                                        <Image src="/user.jpg" width={50} height={50} className='rounded-full' alt='user' />
-                                        <div className="flex flex-col justify-start items-center">
-                                            <p className='text-gray-600'>Sarfaraz Unar</p>
-                                            <div className='text-yellow-500 flex items-center gap-1'><BsStarFill /><BsStarFill /><BsStarFill /><BsStarFill /><BsStarFill /> </div>
-                                        </div>
-                                    </div>
-                                    <p className='text-gray-800 pl-5 text-sm'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum quibusdam pariatur nihil accusantium iure expedita cupiditate nisi vero mollitia autem.</p>
-                                </div>
-
-                                <div className="reply p-2 px-5 my-2 ml-14 bg-white flex flex-col justify-start">
-                                    <p className='text-black font-semibold'>HiTech</p>
-                                    <p className='text-gray-600 text-sm'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eius, alias?</p>
-                                </div>
-                            </div>
-                        </div>
+                       <Review productId={data._id} />
 
                         {/* Questions */}
-                        <div className='flex flex-col col-span-full md:col-span-4 justify-start gap-5'>
-                            <h3 className='text-3xl font-semibold text-black'>Questions</h3>
-                            <div className="conversation flex flex-col justify-start items-start bg-blue-50 rounded-md p-5 pl-10">
-                                <div className="review flex justify-start items-center gap-2">
-                                    <p className='text-gray-600'>Sarfaraz Unar: <span className='text-black'>Is it will run VS Code?</span></p>
-                                </div>
-                                <div className="reply p-2 px-5 my-3 ml-2 bg-white flex flex-col justify-start">
-                                    <p className='text-black font-semibold'>HiTech</p>
-                                    <p className='text-gray-600 text-sm'>Yes, you can run vs code easily with that and do other development stuff.</p>
-                                </div>
-                            </div>
-                        </div>
+                       
+                       <Questions productId={data._id} />
                     </section>
 
                     <h2 className='text-3xl md:text-4xl text-gray-900 font-semibold px-5 md:px-20 py-4'>Related Products</h2>

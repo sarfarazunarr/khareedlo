@@ -36,10 +36,10 @@ const ProductCard = ({ data, cartBtn = true }: { data: ProductCardType, cartBtn?
                         </div>
                         <div className='text-[#A2A6B0] text-xs font-normal hover:underline cursor-pointer flex justify-start items-center gap-2'><span className='hidden md:block'>Reviews</span> ({rating.count})</div>
                     </div>
-                    <Link href={`/products/${data.id}`} className='text-sm text-black uppercase hover:text-primary-500 transition-colors duration-150 cursor-pointer line-clamp-1'>{title}</Link>
+                    <Link href={`/products/${data.slug}`} className='text-sm text-black uppercase hover:text-primary-500 transition-colors duration-150 cursor-pointer line-clamp-1'>{title}</Link>
                     <div>
-                        {discountedprice && <h4 className='text-[14px] line-through text-gray-600'>{price}</h4>}
-                        <h4 className='text-lg font-semibold text-black'>$.{discountedprice ? discountedprice : price}</h4>
+                        {discountedprice && discountedprice == 0 && <h4 className='text-[14px] line-through text-gray-600'>{price}</h4>}
+                        <h4 className='text-lg font-semibold text-black'>${discountedprice ? discountedprice : price}</h4>
                     </div>
                 </div>
                 {cartBtn && <CartBtn cartBtn={cartBtn} data={data} />}
