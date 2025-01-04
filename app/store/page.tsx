@@ -13,7 +13,9 @@ const Store = async () => {
       <div id='products' className='w-full p-10 px-2 md:px-20'>
         <h2 className='text-3xl font-semibold text-primary-900 capitalize'>Your All Favs in one place!</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-4">
-          {data.map((product) => <ProductCard key={product.id} data={product} />)}
+          {!data && <p className='col-span-4 text-center text-gray-800 text-md'>Loading...</p>}
+          {data.length <= 0 && <p className='col-span-4 text-center text-gray-800 text-md'>No Products Available!</p>}
+          {data.length > 0 && data.map((product) => <ProductCard key={product.id} data={product} />)}
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import Hero from "./components/Hero";
 
 export default async function Home() {
   const res = await fetch(`${process.env.PUBLIC_ORIGIN}/api/products?limit=5`);
+
   const data: ProductCardType[] = await res.json();
   const categories = ['jewelery', 'electronics', 'men\'s clothing', 'women\'s clothing'];
   const randomCategory = categories[Math.floor(Math.random() * categories.length)];
@@ -20,13 +21,17 @@ export default async function Home() {
       <section className="w-full p-5" id="products">
         <SectionHeader title="New Products" linkText="View All Products" link="/store" />
         <div className="grid grid-cols-2 gap-1 md:grid-cols-5">
-          {data.map((item) => <ProductCard key={item.id} data={item} />)}
+          {!data && <div className="col-span-5 text-center">Loading...</div>}
+          {data.length <= 0 && <div className="col-span-5 text-center">Products are not available!</div>}
+          {data.length > 0 && data.map((item) => <ProductCard key={item.id} data={item} />)}
         </div>
       </section>
       <section className="w-full p-5">
         <div className="grid grid-cols-1 md:grid-cols-5">
           <SectionCard title={randomCategory} link={`/category/${randomCategory}`} />
-          {data2.map((item) => <ProductCard key={item.id} data={item} />)}
+          {!data2 && <div className="col-span-5 text-center">Loading...</div>}
+          {data2.length <= 0 && <div className="col-span-5 text-center">Products are not available!</div>}
+          {data2.length > 0 && data2.map((item) => <ProductCard key={item.id} data={item} />)}
         </div>
       </section>
       <section className="w-full p-5">

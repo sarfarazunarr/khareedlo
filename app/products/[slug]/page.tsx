@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { BsStarFill } from 'react-icons/bs'
 import Review from './Review';
 import Questions from './Questions';
+import { notFound } from 'next/navigation';
 
 
 const ProductPage = ({ params }: { params: { slug: string } }) => {
@@ -22,8 +23,10 @@ const ProductPage = ({ params }: { params: { slug: string } }) => {
     useEffect(() => {
         const getData = async () => {
             const res = await fetch(`/api/products/${params.slug}`);
-            console.log(process.env.PUBLIC_ORIGIN);
             const info = await res.json();
+            if(res.status == 404){
+                return notFound;
+            }
             setData(info.data);
             setPrice(info.price);
             const res2 = await fetch(`/api/products?limit=4?category=${info.category}`);
