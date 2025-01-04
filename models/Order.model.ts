@@ -1,6 +1,13 @@
-import mongoose from 'mongoose'
+import mongoose, { CallbackError } from 'mongoose'
+import Product from './Product.model';
 
 const OrderSchema = new mongoose.Schema({
+    order_id: {
+        type: String, unique: true
+    },
+    user_id: {
+        type: String
+    },
     customerName: {
         type: String, required: true
     },
@@ -52,6 +59,29 @@ const OrderSchema = new mongoose.Schema({
     }
 })
 
-const Order = mongoose.models.Order || mongoose.model("Orders", OrderSchema);
+
+OrderSchema.pre('save', async function (next) {
+    try {
+      let total = 0;
+  
+      for (const item of this.products) {
+        const product = await Product.findById(item.productId);
+  
+        if (!product) {
+          throw new Error(`Product with ID ${item.productId} not found.`);
+        }
+  
+        total += product.price * item.qty;
+      }
+  
+      this.amount = total;
+      next();
+    } catch (error) {
+      next(error as CallbackError);
+    }
+  });
+  
+
+const Order = mongoose.models.Order || mongoose.model("Order", OrderSchema);
 
 export default Order;

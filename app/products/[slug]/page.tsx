@@ -37,9 +37,9 @@ const ProductPage = ({ params }: { params: { slug: string } }) => {
         setPrice((data?.price || 0) * qty);
     }, [data?.price, qty])
 
-    const handleAddToCart = (id: number, title: string, image: string, price: number) => {
+    const handleAddToCart = (_id:string, id: number, title: string, image: string, price: number) => {
         const cartItem: CartProduct = {
-            id, title, image, price, quantity: qty, totalAmount: qty * price
+            id, _id, title, image, price, quantity: qty, totalAmount: qty * price
         }
         addToCart(cartItem);
         setCartbtn("Item added!")
@@ -59,7 +59,7 @@ const ProductPage = ({ params }: { params: { slug: string } }) => {
                                 <h3 className='text-[#666666] '>Just For You in</h3> <span className='text-black font-semibold'>${price}</span>
                             </div>
                             <input type="number" min={0} className='border-2 border-gray-200 rounded-md py-2 px-3 bg-[#F5F7FF] outline-none w-14' value={qty} onChange={(e) => { setQty(parseInt(e.target.value)) }} />
-                            <button className='px-4 py-3 md:p-3 md:px-4 rounded-full font-semibold bg-primary-700 text-white text-xs md:text-sm uppercase' onClick={() => handleAddToCart(data?.id || 0, data?.title || '', data?.image || '', data?.price || 0)}>{cartbtn}</button>
+                            <button className='px-4 py-3 md:p-3 md:px-4 rounded-full font-semibold bg-primary-700 text-white text-xs md:text-sm uppercase' onClick={() => handleAddToCart(data?._id,data?.id || 0, data?.title || '', data?.image || '', data?.price || 0)}>{cartbtn}</button>
                         </div>
                     </div>
 

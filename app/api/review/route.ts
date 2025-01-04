@@ -38,7 +38,6 @@ export async function POST(req: NextRequest) {
     // Calculate the average rating
     const ratings = reviews.map(review => review.rate);
     const averageRating = calculateAverageRating(ratings);
-    console.log(averageRating);
 
     // Update the product rating
     const updatedProduct = await Product.findByIdAndUpdate(findProduct._id, {

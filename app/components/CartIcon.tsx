@@ -23,7 +23,7 @@ const CartIcon = () => {
         <h2 className='font-semibold text-2xl mb-5'>Your Cart</h2>
         <ul className='list-none mb-5'>
           {cart.length > 0 && cart.map((item) => (
-            <li key={item.id} className='flex items-center justify-between py-2'>
+            <li key={item._id} className='flex items-center justify-between py-2'>
               <div className='flex items-center gap-3'>
                 <Image src={item.image} width={50} height={50} className='rounded-md' alt={item.title} />
                 <h3 className='text-sm font-semibold'>{item.title}</h3>

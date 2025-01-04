@@ -9,9 +9,9 @@ const CartBtn = ({ cartBtn, data }: { cartBtn: boolean, data: ProductCardType })
     const { addToCart } = useCartStore();
     const [isInCart, setIsInCart] = useState(false);
     const handleAddToCart = () => {
-        const { id, title, image, price } = data;
+        const { id, _id, title, image, price } = data;
         const cartItem: CartProduct = {
-            id, title, image, price, quantity: 1, totalAmount: price
+            id, _id, title, image, price, quantity: 1, totalAmount: price
         }
         addToCart(cartItem);
         setIsInCart(true);

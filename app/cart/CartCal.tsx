@@ -4,9 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
 
-const CartCal = ({ isCheckout = false }: { isCheckout?: boolean }) => {
+const CartCal = ({ isCheckout = false, amount }: { isCheckout?: boolean, amount?:number }) => {
     const { cart } = useCartStore();
-    const totalAmount = cart.reduce((total, item) => total + item.totalAmount, 0);
+    const totalAmount = amount || cart.reduce((total, item) => total + item.totalAmount, 0);
     const totalAmountFixed = Number(totalAmount.toFixed(2));
     const shipping = 13;
     const tax = Number(((totalAmount / 100) * 10).toFixed(2));
