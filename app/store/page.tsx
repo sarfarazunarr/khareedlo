@@ -2,10 +2,19 @@ import React from 'react'
 import ProductCard from '../components/ProductCard';
 import { ProductCardType } from '@/types/ProductCard';
 import Hero from '../components/Hero';
+import Product from '@/models/Product.model';
+import ConnectDB from '@/utils/ConnectDB';
 
 const Store = async () => {
-  const res = await fetch(`${process.env.PUBLIC_ORIGIN}/api/products?limit=20`);
-  const data: ProductCardType[] = await res.json();
+  let data: ProductCardType[] = [];
+  try {
+    await ConnectDB();
+    data = await Product.find({});
+  } catch (error) {
+    console.log(error);
+    data = [];
+  }
+
 
   return (
     <div className='w-full'>

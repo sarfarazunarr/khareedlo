@@ -4,17 +4,24 @@ import SectionCard from "./components/SectionCard";
 import Testimonial from "./components/Testimonial";
 import { ProductCardType } from "@/types/ProductCard";
 import Hero from "./components/Hero";
+import Product from "@/models/Product.model";
+import ConnectDB from "@/utils/ConnectDB";
 
 export default async function Home() {
-  const res = await fetch(`${process.env.PUBLIC_ORIGIN}/api/products?limit=5`);
-
-  const data: ProductCardType[] = await res.json();
+  let data: ProductCardType[] = [];
+  let data2: ProductCardType[] = [];
   const categories = ['jewelery', 'electronics', 'men\'s clothing', 'women\'s clothing'];
   const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-  const res2 = await fetch(`${process.env.PUBLIC_ORIGIN}/api/products?limit=4?category=${randomCategory}`);
-  const data2: ProductCardType[] = await res2.json();
 
-  
+  try {
+    await ConnectDB();
+    data = await Product.find({}).limit(15);
+    data2 = await Product.find({category: randomCategory});
+  } catch (error) {
+    data = [];
+    data2 = [];
+    console.log(error);
+  }
   return (
     <div className="w-full">
       <Hero title="Your One-Stop Shop For Everything You Love" subtitle="Discover Amazing Deals and Unbeatable Prices Today!" />

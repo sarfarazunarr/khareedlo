@@ -2,15 +2,20 @@ import React from 'react'
 import ProductCard from '@/app/components/ProductCard';
 import { ProductCardType } from '@/types/ProductCard';
 import Hero from '@/app/components/Hero';
-import NotFound from '@/app/not-found';
+import Product from '@/models/Product.model';
+import ConnectDB from '@/utils/ConnectDB';
 
 const Category = async ({ params }: { params: { slug: string } }) => {
-  const res = await fetch(`${process.env.PUBLIC_ORIGIN}/api/products?category=${params.slug}`);
-  if(res.status == 404){
-    return NotFound();
+  let data: ProductCardType[] = [];
+  try {
+    await ConnectDB();
+    const slug = params.slug.replace(/%20/g, ' ')
+    data = await Product.find({category: slug});
+  } catch (error) {
+    data = [];
+    console.log(error)
   }
-  const data: ProductCardType[] = await res.json();
-
+  
   return (
     <div className='w-full'>
       <Hero title={`Explore ${params.slug.replace(/%20/g, ' ')}!`} subtitle={`Find all the ${params.slug.replace(/%20/g, ' ')} you love and more!`} category={params.slug.replace(/%20/g, ' ')} />
